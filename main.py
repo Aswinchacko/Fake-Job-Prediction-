@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import os
+from fastapi.middleware.cors import CORSMiddleware
+
 
 # Load model and vectorizer
 model = joblib.load(os.path.join(os.path.dirname(__file__), "model.joblib"))
@@ -9,6 +11,15 @@ vectorizer = joblib.load(os.path.join(os.path.dirname(__file__), "vectorizer.job
 
 # Create FastAPI app
 app = FastAPI(title="Job Scam Detector API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Request schema
 class JobPost(BaseModel):
